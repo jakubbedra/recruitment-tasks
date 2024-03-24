@@ -3,14 +3,17 @@ package org.example.pairs;
 import org.example.common.Processor;
 import org.example.common.SimpleListIO;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PairProcessor implements Processor {
 
+    private static final int SEARCHED_SUM = 13;
+
     private SimpleListIO simpleListIO;
 
-    public PairProcessor(SimpleListIO simpleListIO){
+    public PairProcessor(SimpleListIO simpleListIO) {
         this.simpleListIO = simpleListIO;
     }
 
@@ -20,18 +23,16 @@ public class PairProcessor implements Processor {
                 .sorted()
                 .collect(Collectors.toList());
 
+        Integer[] numbers = input.toArray(new Integer[0]);
         List<String> pairs = new LinkedList<>();
-        Set<Integer> numbers = new HashSet<>();
-        Set<Integer> foundComplements = new HashSet<>();
 
-        for (Integer number : input) {
-            int complement = 13 - number;
-            if (input.contains(complement) && !foundComplements.contains(number)) {
-                int smaller = Math.min(complement, number);
-                int greater = Math.max(complement, number);
-                pairs.add(smaller + " " + greater);
+        int n = input.size();
+        for (int v = 0; v < n; v++) {
+            for (int u = v; u < n; u++) {
+                if (numbers[v] + numbers[u] == SEARCHED_SUM) {
+                    pairs.add(numbers[v] + " " + numbers[u]);
+                }
             }
-            foundComplements.add(complement);
         }
 
         simpleListIO.write(String.join("\n", pairs));
